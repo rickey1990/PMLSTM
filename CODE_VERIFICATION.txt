@@ -1,0 +1,2 @@
+PMLSTM: PASS | params=9576 | output error=2.22e-16 | max parameter gradient error=3.79e-19
+PMLSTM27: PASS | params=18900 | output error=2.22e-16 | max parameter gradient error=6.51e-19
