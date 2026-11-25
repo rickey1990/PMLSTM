@@ -1,9 +1,8 @@
 # SPDX-License-Identifier: AGPL-3.0-only
 # Copyright (C) 2026 PMLSTM project author <rickeyernest1990@gmail.com>
 # Derived from the PPLSTM research reference: https://github.com/rickey1990/PPLSTM
-"""Final six-logit PM reference. The inherited permutation bank buffer is unused; it is retained for compatibility with experimental checkpoints."""
+"""PMLSTM: six-logit column-stochastic transition-monoid reference."""
 
-import itertools
 import math
 
 import torch
@@ -58,16 +57,10 @@ class PMLSTM(nn.Module):
         self.fb = nn.Parameter(torch.full((d,), 4.0))
         self.sign = nn.Linear(d, d)
         self.sel = nn.Linear(d, 2 * d)
-        # Preserve the reference initialisation and checkpoint keys.
-        self.register_buffer("bank", torch.eye(3)[torch.tensor(list(itertools.permutations(range(3))))].reshape(6, 9))
         nn.init.zeros_(self.sign.weight)
         nn.init.constant_(self.sign.bias, 2.8)
         nn.init.zeros_(self.sel.weight)
-        nn.init.constant_(self.sel.bias, -1.0)
-        with torch.no_grad():
-            self.sel.bias[::6] = 3.0
-        with torch.no_grad():
-            self.sel.bias.fill_(-math.log((math.exp(4) + 1) / 2))
+        nn.init.constant_(self.sel.bias, -math.log((math.exp(4) + 1) / 2))
 
     def forward(self, x, serial=False):
         """x: [batch, time, width]. Returns a tensor of the same shape."""
