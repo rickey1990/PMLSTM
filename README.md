@@ -38,7 +38,7 @@ y = cell(x)
 print(y.shape)  # torch.Size([2, 128, 36])
 ```
 
-For the historical cell, use `from pmlstm_27 import PMLSTM27`. Both modules are self-contained and use plain PyTorch; width must be divisible by three. Both expose `serial_reference(x)` for numerical comparison with the parallel state scan. No custom CUDA kernel or streaming state API is included. The final PM retains an unused permutation-bank buffer for compatibility with earlier experiment checkpoints.
+For the historical cell, use `from pmlstm_27 import PMLSTM27`. Both modules are self-contained and use plain PyTorch; width must be divisible by three. Both expose `serial_reference(x)` for numerical comparison with the parallel state scan. No custom CUDA kernel or streaming state API is included. The final PM constructs its column-stochastic matrix directly, without a permutation bank or enumeration of the 27 maps. For older standalone PM checkpoints only, remove the unused `bank` entry from the state dictionary before loading (`state_dict.pop('bank', None)` followed by `cell.load_state_dict(state_dict)`). The same applies to the corresponding PM module's prefixed buffer key in a full-model checkpoint. All trainable parameters and initial values are unchanged.
 
 ## Early results — final six-logit PM
 
@@ -59,7 +59,7 @@ The included CPU tests verify serial/parallel agreement, input and parameter gra
 - [Proof of concept (PDF)](PMLSTM_Proof_of_Concept.pdf)
 - [Language results](results/language.json), [CPU speed](results/speed_cpu.json), [initial checks](results/initial_checks.json), [configuration](results/config.json), [gradient diagnostics](results/gradient_audit.json)
 
-This is a cell release, not the full training reproduction archive: dataset, tokeniser, benchmark scripts and trained checkpoints are not included. The published results were obtained with the original experimental modules; the two standalone modules retain their equations and parameter layout.
+This is a cell release, not the full training reproduction archive: dataset, tokeniser, benchmark scripts and trained checkpoints are not included. The published results were obtained with the original experimental modules; the two standalone modules retain their equations and trainable parameter layout. The cleaned six-logit module was checked against the previous release in float32 and float64 on CPU, with exactly equal outputs, input gradients and parameter gradients for the tested inputs and weights.
 
 ## Licence and attribution
 
