@@ -13,11 +13,15 @@ PMLSTM (PM) is a parallel-scannable recurrent memory cell developed from [PPLSTM
 
 The original formulation is $M_t=\sum_{j=1}^{27}w_{t,j}T_j$. All six permutations are included in the 27-map transition monoid. Its convex hull is the set of column-stochastic 3 × 3 matrices. The final formulation uses two learned logits per source column, with a fixed zero logit for the identity route:
 
-$$M_t[r,j]=\operatorname{softmax}(0,a_{t,j},b_{t,j})[(r-j)\bmod 3].$$
+$
+M_t[r,j]=\mathrm{softmax}(0,a_{t,j},b_{t,j})[(r-j)\bmod 3].
+$
 
 This preserves the attainable transition-matrix family at each token (with boundary matrices approached in the softmax limit), not necessarily the same learned function or optimisation dynamics. The signed memory recurrence remains:
 
-$$c_t=f_tM_t\operatorname{diag}(s_t)c_{t-1}+i_tz_t,$$
+$
+c_t=f_tM_t\mathrm{diag}(s_t)c_{t-1}+i_tz_t,
+$
 
 with the PPLSTM stabiliser, normaliser and associative affine prefix scan. The final PM has the same selector parameter count as PP. See the [proof of concept](PMLSTM_Proof_of_Concept.pdf) for the full equations.
 
