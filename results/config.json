@@ -1,0 +1,21 @@
+{
+  "seed": 42,
+  "steps": 4884,
+  "device": "cpu",
+  "torch": "2.10.0+cpu",
+  "cpu": "",
+  "threads_per_worker": 1,
+  "workers": 4,
+  "models": [
+    "PP",
+    "PM",
+    "M+PP",
+    "M+PM",
+    "Transformer"
+  ],
+  "transformer_train_layers": 1,
+  "transformer_speed_layers": 2,
+  "lr": 0.001,
+  "batch": 32,
+  "length": 32
+}
